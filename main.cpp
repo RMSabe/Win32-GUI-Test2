@@ -59,6 +59,12 @@ void paintSecondScreen(void)
   return;
 }
 
+void popMessageBox(void)
+{
+  MessageBox(NULL, TEXT("Here is your message box!\n:D"), TEXT("Just A Regular Message Box"), MB_OK);
+  return;
+}
+
 void createElements(void)
 {
   DWORD elementStyle = 0;
@@ -121,6 +127,34 @@ LRESULT CALLBACK windowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
     case WM_CLOSE:
       PostQuitMessage(0);
       return 0;
+      
+    case WM_COMMAND:
+      switch(runtimeStatus)
+      {
+        case RUNTIME_STATUS_FIRST:
+          if(arg == BUTTON_1)
+          {
+            runtimeStatus = RUNTIME_STATUS_FINAL;
+            paintSecondScreen();
+            return 0;
+          }
+          else if(arg == BUTTON_2)
+          {
+            popMessageBox();
+            return 0;
+          }
+          break;
+          
+        case RUNTIME_STATUS_FINAL:
+          if(arg == BUTTON_1)
+          {
+            runtimeStatus = RUNTIME_STATUS_FIRST;
+            paintFirstScreen();
+            return 0;
+          }
+          break;
+      }
+      break;
   }
   
   return DefWindowProc(hWnd, msg, wParam, lParam);
